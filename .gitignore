@@ -1,1 +1,2 @@
 .envrc
+src/hal2cff/version.py
