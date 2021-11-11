@@ -20,8 +20,9 @@ def halref_to_url(halref):
         pass
 
 
-g = get_hal_graph("https://data.archives-ouvertes.fr/document/hal-00000001v2.rdf")
+g = get_hal_graph("https://data.archives-ouvertes.fr/document/hal-02371715.rdf")
 
-dir(g)
+for (sub, obj, pred) in g:
+    print(sub,obj,pred)
 
 
