@@ -42,12 +42,27 @@ for (sub, obj, pred) in g:
     print(sub,obj,pred)
 
 
-def get_abstract(doc_graph):
-    return doc_graph.value(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2"), URIRef("http://purl.org/dc/terms/abstract")).value
+def get_attribute(doc_graph, doc_uri, attr_name):
+    """
+    doc_graph: Graph
+    doc_uri: URIRef or str
+    attr_name: URIRef or str
+    """
+    
+    return doc_graph.value(URIRef(doc_uri), URIRef(attr_name)) 
 
 
-abstract = get_abstract(g)
+def get_abstract(doc_graph, doc_uri):
+    return get_attribute(doc_graph, doc_uri, URIRef("http://purl.org/dc/terms/abstract"))
 
-abstract
+
+get_abstract(g, URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2"))
 
 
+def get_title(doc_graph):
+    return doc_graph.value(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2"), URIRef("http://purl.org/dc/terms/title")).value
+
+
+get_title(g)
+
+g.identifier
