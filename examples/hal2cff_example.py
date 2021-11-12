@@ -58,7 +58,7 @@ to_rdf(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2"))
 to_rdf(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf"))
 
 
-def get_latest_version(doc_graph, doc_uri):  # XXX change name
+def get_one_version(doc_graph, doc_uri):  # XXX change name, refactor
     """
     doc_graph: Graph
     doc_uri: URIRef or str
@@ -67,16 +67,33 @@ def get_latest_version(doc_graph, doc_uri):  # XXX change name
     # if the document contains a title, return 'doc_uri'.
     # otherwise, see if doc_uri is in one or more 'has_version' relationships,
     # and return the URI of the document whose version seems the highest
+    
+    # get latest version by walking isReplacedBy links
     if get_title(doc_graph, doc_uri) is not None:
         return doc_uri
     else:
         doc_versions = list(doc_graph.objects(to_canonical(doc_uri), URIRef("http://purl.org/dc/terms/hasVersion")))
-        return doc_versions
+        assert doc_versions, "no version found"
+        return doc_versions[0]
+
+
+def get_latest_version(doc_uri):
+    """
+    Get the latest version of a document by following 'isReplacedBy' links
+    """
+    doc_graph = Graph().parse(to_rdf(doc_uri))
+    while (replaced_by := get_attribute(doc_graph, doc_uri, "http://purl.org/dc/terms/isReplacedBy")) is not None:
+        doc_uri = replaced_by
+        doc_graph = Graph()
+        doc_graph.parse(to_rdf(doc_uri))
+    return doc_uri
 
 
 g = get_hal_graph("https://data.archives-ouvertes.fr/document/hal-02371715.rdf")
 
-get_latest_version(g, "https://data.archives-ouvertes.fr/document/hal-02371715")
+get_one_version(g, "https://data.archives-ouvertes.fr/document/hal-02371715")
+
+get_latest_version("https://data.archives-ouvertes.fr/document/hal-02371715v1")
 
 for (sub, obj, pred) in g:
     print(sub,obj,pred)
