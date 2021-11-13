@@ -112,11 +112,11 @@ get_one_version(g, "https://data.archives-ouvertes.fr/document/hal-02371715")
 get_latest_version("https://data.archives-ouvertes.fr/document/hal-02371715v1")
 
 
-def get_author_nodes(doc_graph):
+def get_author_nodes(doc_graph: Graph):
     return doc_graph.subjects(RDF.type, URIRef("http://data.archives-ouvertes.fr/schema/Author"))
 
 
-list(get_author_nodes(get_hal_graph("https://data.archives-ouvertes.fr/document/hal-02371715v1")))
+list(get_author_nodes(get_hal_graph("https://data.archives-ouvertes.fr/document/hal-02371715v2")))
 
 for (sub, obj, pred) in g:
     print(sub,obj,pred)
@@ -153,13 +153,25 @@ def hal2cff(halref):
     graph = get_hal_graph(halref)
     one_version_halref = get_one_version(graph, halref)
     latest_version = get_latest_version(one_version_halref)
-    graph = get_hal_graph(latest_version)  # XXX do not reuse name
+    graph = get_hal_graph(latest_version)  # XXX do not reuse name!
     title = get_title(graph, latest_version)
     abstract = get_abstract(graph, latest_version)
-    return title, abstract
+    
+    # XXX refactor!
+    authors = []
+    for node in get_author_nodes(graph):
+        author_doc_ref = next(graph.objects(node, URIRef("http://data.archives-ouvertes.fr/schema/person")))
+        author_graph = get_hal_graph(author_doc_ref)
+        fname = get_attribute(author_graph, author_doc_ref, "http://xmlns.com/foaf/0.1/firstName")
+        lname = get_attribute(author_graph, author_doc_ref, "http://xmlns.com/foaf/0.1/familyName")
+        authors.append((fname.value, lname.value))
+    
+    return title, abstract, authors
 
 
 model = hal2cff("https://data.archives-ouvertes.fr/document/hal-02371715")
+
+model
 
 
 def output_cff(model):
@@ -168,7 +180,13 @@ def output_cff(model):
         'message': "If you use this software, please cite both the article from preferred-citation and the software itself.",
         'preferred-citation': {
             'title': model[0].value,
-            'abstract': model[1].value
+            'abstract': model[1].value,
+            'authors': [
+                {
+                    'family-names': author[0],
+                    'given-names': author[1]
+                }
+            for author in model[2:]]
         }
     })
 
