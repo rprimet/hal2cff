@@ -2,13 +2,11 @@ from rdflib import Graph, URIRef
 import rdflib
 
 
-def hal2cff(halref):
-    """
-    halref: str
-        HAL document URL or identifier
-    """
-    pass
-
+# For the first step, we want to get
+# - title
+# - abstract
+#
+# In a second step, we want to format those as a 
 
 def get_hal_graph(halref):
     """
@@ -34,17 +32,17 @@ def halref_to_url(halref):
 
 
 # +
-def to_canonical(ref):
-    if str(ref).endswith('.rdf'):
-        return URIRef(str(ref)[:-4])
+def to_canonical(halref):
+    if str(halref).endswith('.rdf'):
+        return URIRef(str(halref)[:-4])
     else:
-        return ref
+        return halref
 
-def to_rdf(ref):
-    if not str(ref).endswith('.rdf'):
-        return URIRef(f"{str(ref)}.rdf")
+def to_rdf(halref):
+    if not str(halref).endswith('.rdf'):
+        return URIRef(f"{str(halref)}.rdf")
     else:
-        return ref
+        return halref
 
 
 # -
@@ -120,3 +118,19 @@ def get_title(doc_graph, doc_uri):
     return get_attribute(doc_graph, doc_uri, URIRef("http://purl.org/dc/terms/title"))
 
 
+def hal2cff(halref):
+    """
+    halref: str
+        HAL document URL or identifier
+    """
+    halref = to_canonical(halref)
+    graph = get_hal_graph(halref)
+    one_version_halref = get_one_version(graph, halref)
+    latest_version = get_latest_version(halref)
+    graph = get_hal_graph(latest_version)  # XXX do not reuse name
+    title = get_title(graph, latest_version)
+    abstract = get_abstract(graph, latest_version)
+    return title, abstract
+
+
+hal2cff("https://data.archives-ouvertes.fr/document/hal-02371715")
