@@ -3,6 +3,7 @@
 from rdflib import Graph, RDF, URIRef
 import rdflib
 import yaml
+from urllib.parse import urlparse
 
 
 # For the first step, we want to get
@@ -122,7 +123,6 @@ for (sub, obj, pred) in g:
     print(sub,obj,pred)
 
 
-# XXX either fetch doc_graph or get it if None?
 def get_attribute(doc_graph, doc_uri, attr_name):
     """
     doc_graph: Graph
@@ -183,8 +183,8 @@ def output_cff(model):
             'abstract': model[1].value,
             'authors': [
                 {
-                    'family-names': author[0],
-                    'given-names': author[1]
+                    'given-names': author[0],
+                    'family-names': author[1]
                 }
             for author in model[2:]]
         }
