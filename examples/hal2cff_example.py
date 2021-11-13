@@ -1,6 +1,6 @@
 # # hal2cff example
 
-from rdflib import Graph, URIRef
+from rdflib import Graph, RDF, URIRef
 import rdflib
 import yaml
 
@@ -16,10 +16,12 @@ import yaml
 # In a third step, we want to enrich this with the authors list
 #
 # In a fourth (and last?) step, we want to add affiliation data to the authors list
+#
+# Extra credits : tools/UIs to wrangle affiliation data, first/other authors distinction, keywords, ...
 
-def get_hal_graph(halref):
+def get_hal_graph(halref) -> Graph:
     """
-    halref: str
+    halref: URIRef or str
         HAL document URL or identifier
     """
     g = Graph()
@@ -27,9 +29,9 @@ def get_hal_graph(halref):
     return g
 
 
-def halref_to_url(halref):
+def halref_to_url(halref) -> URIRef:
     """
-    halref: str
+    halref: URIRef or str
         HAL document URL or identifier
     
     https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf -> https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf
@@ -42,13 +44,19 @@ def halref_to_url(halref):
 
 
 # +
-def to_canonical(halref):
+def to_canonical(halref) -> URIRef:
+    """
+    halref: URIRef or str
+    """
     if str(halref).endswith('.rdf'):
         return URIRef(str(halref)[:-4])
     else:
         return halref
 
-def to_rdf(halref):
+def to_rdf(halref) -> URIRef:
+    """
+    halref: URIRef or str
+    """
     if not str(halref).endswith('.rdf'):
         return URIRef(f"{str(halref)}.rdf")
     else:
@@ -66,7 +74,7 @@ to_rdf(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2"))
 to_rdf(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf"))
 
 
-def get_one_version(doc_graph, doc_uri):  # XXX change name, refactor
+def get_one_version(doc_graph, doc_uri) -> URIRef:  # XXX change name, refactor
     """
     doc_graph: Graph
     doc_uri: URIRef or str
@@ -85,7 +93,7 @@ def get_one_version(doc_graph, doc_uri):  # XXX change name, refactor
         return doc_versions[0]
 
 
-def get_latest_version(doc_uri):
+def get_latest_version(doc_uri) -> URIRef:
     """
     Get the latest version of a document by following 'isReplacedBy' links
     """
@@ -102,6 +110,13 @@ g = get_hal_graph("https://data.archives-ouvertes.fr/document/hal-02371715.rdf")
 get_one_version(g, "https://data.archives-ouvertes.fr/document/hal-02371715")
 
 get_latest_version("https://data.archives-ouvertes.fr/document/hal-02371715v1")
+
+
+def get_author_nodes(doc_graph):
+    return doc_graph.subjects(RDF.type, URIRef("http://data.archives-ouvertes.fr/schema/Author"))
+
+
+list(get_author_nodes(get_hal_graph("https://data.archives-ouvertes.fr/document/hal-02371715v1")))
 
 for (sub, obj, pred) in g:
     print(sub,obj,pred)
