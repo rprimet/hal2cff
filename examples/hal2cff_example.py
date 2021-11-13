@@ -126,7 +126,7 @@ def hal2cff(halref):
     halref = to_canonical(halref)
     graph = get_hal_graph(halref)
     one_version_halref = get_one_version(graph, halref)
-    latest_version = get_latest_version(halref)
+    latest_version = get_latest_version(one_version_halref)
     graph = get_hal_graph(latest_version)  # XXX do not reuse name
     title = get_title(graph, latest_version)
     abstract = get_abstract(graph, latest_version)
@@ -134,3 +134,5 @@ def hal2cff(halref):
 
 
 hal2cff("https://data.archives-ouvertes.fr/document/hal-02371715")
+
+
