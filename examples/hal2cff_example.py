@@ -1,12 +1,19 @@
 from rdflib import Graph, URIRef
 import rdflib
+import yaml
 
 
 # For the first step, we want to get
 # - title
 # - abstract
 #
-# In a second step, we want to format those as a 
+# from a HAL reference.
+#
+# In a second step, we want to format those as a YAML snippet as a valid, preferred-citation CFF file.
+#
+# In a third step, we want to enrich this with the authors list
+#
+# In a fourth (and last?) step, we want to add affiliation data to the authors list
 
 def get_hal_graph(halref):
     """
@@ -26,6 +33,7 @@ def halref_to_url(halref):
     https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf -> https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf
     https://data.archives-ouvertes.fr/document/hal-02371715 -> https://data.archives-ouvertes.fr/document/hal-02371715
     hal-02371715 -> https://data.archives-ouvertes.fr/document/hal-02371715.rdf
+    (Most important!) https://hal.archives-ouvertes.fr/hal-02371715v2 -> https://data.archives-ouvertes.fr/document/hal-02371715v2
     """
     if halref.startswith("https://data.archives-ouvertes.fr/document/"):
         pass
@@ -97,6 +105,7 @@ for (sub, obj, pred) in g:
     print(sub,obj,pred)
 
 
+# XXX either fetch doc_graph or get it if None
 def get_attribute(doc_graph, doc_uri, attr_name):
     """
     doc_graph: Graph
@@ -134,5 +143,15 @@ def hal2cff(halref):
 
 
 hal2cff("https://data.archives-ouvertes.fr/document/hal-02371715")
+
+
+def output_cff():
+    return yaml.dump({
+        'cff-version': '1.2.0',
+        'message': "If you use this software, please cite both the article from preferred-citation and the software itself."
+    })
+
+
+print(output_cff())
 
 
