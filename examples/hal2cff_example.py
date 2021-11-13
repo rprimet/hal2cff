@@ -3,7 +3,7 @@
 from rdflib import Graph, RDF, URIRef
 import rdflib
 import yaml
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 
 
 # For the first step, we want to get
@@ -16,7 +16,7 @@ from urllib.parse import urlparse
 #
 # In a third step, we want to enrich this with the authors list
 #
-# In a fourth (and last?) step, we want to add affiliation data to the authors list
+# In a fourth (and last?) step, we want to add (draft) affiliation data to the authors list
 #
 # Extra credits : tools/UIs to wrangle affiliation data, first/other authors distinction, keywords, ...
 
@@ -30,18 +30,27 @@ def get_hal_graph(halref) -> Graph:
     return g
 
 
-def halref_to_url(halref) -> URIRef:
+def halref_to_data_url(halref) -> URIRef:
     """
     halref: URIRef or str
         HAL document URL or identifier
-    
+    (Most important!) https://hal.archives-ouvertes.fr/hal-02371715v2 -> https://data.archives-ouvertes.fr/document/hal-02371715v2
     https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf -> https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf
     https://data.archives-ouvertes.fr/document/hal-02371715 -> https://data.archives-ouvertes.fr/document/hal-02371715
-    hal-02371715 -> https://data.archives-ouvertes.fr/document/hal-02371715.rdf
-    (Most important!) https://hal.archives-ouvertes.fr/hal-02371715v2 -> https://data.archives-ouvertes.fr/document/hal-02371715v2
     """
-    if halref.startswith("https://data.archives-ouvertes.fr/document/"):
-        pass
+    parsed_ref = urlparse(halref)
+    assert "archives-ouvertes.fr" in parsed_ref.netloc, "Expected HAL (or HAL-data) document URL"
+    assert "hal-" in parsed_ref.path, "Expected HAL (or HAL-data) document URL"
+    if "hal.archives-ouvertes.fr" in parsed_ref.netloc:
+        parsed_ref = parsed_ref._replace(netloc="data.archives-ouvertes.fr",
+                                        path=f"/document{parsed_ref.path}")
+    return urlunparse(parsed_ref)
+    
+
+
+halref_to_data_url("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf")
+
+halref_to_data_url("https://hal.archives-ouvertes.fr/hal-02371715v2")
 
 
 # +
