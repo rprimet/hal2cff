@@ -1,3 +1,5 @@
+# # hal2cff example
+
 from rdflib import Graph, URIRef
 import rdflib
 import yaml
@@ -105,7 +107,7 @@ for (sub, obj, pred) in g:
     print(sub,obj,pred)
 
 
-# XXX either fetch doc_graph or get it if None
+# XXX either fetch doc_graph or get it if None?
 def get_attribute(doc_graph, doc_uri, attr_name):
     """
     doc_graph: Graph
@@ -142,16 +144,20 @@ def hal2cff(halref):
     return title, abstract
 
 
-hal2cff("https://data.archives-ouvertes.fr/document/hal-02371715")
+model = hal2cff("https://data.archives-ouvertes.fr/document/hal-02371715")
 
 
-def output_cff():
+def output_cff(model):
     return yaml.dump({
         'cff-version': '1.2.0',
-        'message': "If you use this software, please cite both the article from preferred-citation and the software itself."
+        'message': "If you use this software, please cite both the article from preferred-citation and the software itself.",
+        'preferred-citation': {
+            'title': model[0].value,
+            'abstract': model[1].value
+        }
     })
 
 
-print(output_cff())
+print(output_cff(model))
 
 
