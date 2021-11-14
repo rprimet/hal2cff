@@ -81,8 +81,13 @@ def get_title(doc_graph, doc_uri):
     return get_attribute(doc_graph, doc_uri, URIRef("http://purl.org/dc/terms/title"))
 
 
-def get_one_version(doc_graph, doc_uri) -> URIRef:  # XXX change name, refactor
+def get_one_version(doc_graph, doc_uri) -> URIRef:
     """
+    A HAL document may be either a 'concrete' version of a document, 
+    or a canonical document that points to one or more versions.
+    
+    get_one_version attempts to return the URI of a 'concrete' version.
+    
     doc_graph: Graph
     doc_uri: URIRef or str
     """
@@ -137,14 +142,15 @@ def hal_document(halref):
     graph = get_hal_graph(halref)
     one_version_halref = get_one_version(graph, halref)
     latest_version = get_latest_version(one_version_halref)
-    graph = get_hal_graph(latest_version)  # XXX do not reuse name!
-    title = get_title(graph, latest_version).value  # XXX None case (value)
-    abstract = get_abstract(graph, latest_version).value  # XXX None case (value)
+    
+    latest_doc_graph = get_hal_graph(latest_version)
+    title = get_title(latest_doc_graph, latest_version).value  # XXX None case (value)
+    abstract = get_abstract(latest_doc_graph, latest_version).value  # XXX None case (value)
     
     # XXX refactor!
     authors = []
-    for node in get_author_nodes(graph):
-        author_doc_ref = next(graph.objects(node, URIRef("http://data.archives-ouvertes.fr/schema/person")))
+    for node in get_author_nodes(latest_doc_graph):
+        author_doc_ref = next(latest_doc_graph.objects(node, URIRef("http://data.archives-ouvertes.fr/schema/person")))
         author_graph = get_hal_graph(author_doc_ref)
         fname = get_attribute(author_graph, author_doc_ref, "http://xmlns.com/foaf/0.1/firstName")
         lname = get_attribute(author_graph, author_doc_ref, "http://xmlns.com/foaf/0.1/familyName")

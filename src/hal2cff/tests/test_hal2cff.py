@@ -27,4 +27,6 @@ def test_hal_document():
 def test_hal2cff():
     dump = hal2cff("https://hal.archives-ouvertes.fr/hal-02371715")
     assert "DiCoDiLe" in dump
+    other_dump = hal2cff("https://hal.archives-ouvertes.fr/hal-02485642")
+    assert "Primet" in other_dump
     

@@ -12,7 +12,12 @@
 #
 # In a fourth (and last?) step, we want to add (draft) affiliation data to the authors list
 #
-# Extra credits: tools/UIs to wrangle affiliation data, first/other authors distinction, keywords, ...
+# Extra credits: 
+# - tools/UIs to wrangle affiliation data, 
+# - first/other authors distinction, 
+# - keywords, 
+# - search docs with the HAL API directly,
+# - et caetera
 #
 # Stuff that would be nice but not trivial to do (and it's irksome): "copy to clipboard" button, urlparams...
 #
