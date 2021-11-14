@@ -18,35 +18,6 @@
 #
 # Point to make: really nice for projects that require a server side but no (writable) DB 
 
-halref_to_data_url("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf")
-
-halref_to_data_url("https://hal.archives-ouvertes.fr/hal-02371715v2")
-
-
-# +
-def to_canonical(halref) -> URIRef:
-    """
-    halref: URIRef or str
-        HAL document URI
-    """
-    if str(halref).endswith('.rdf'):
-        return URIRef(str(halref)[:-4])
-    else:
-        return halref
-
-def to_rdf(halref) -> URIRef:
-    """
-    halref: URIRef or str
-        HAL document URI
-    """
-    if not str(halref).endswith('.rdf'):
-        return URIRef(f"{str(halref)}.rdf")
-    else:
-        return halref
-
-
-# -
-
 to_canonical(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf"))
 
 to_canonical(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2"))

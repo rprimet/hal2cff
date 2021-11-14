@@ -7,6 +7,8 @@ from dataclasses import dataclass
 
 def get_hal_graph(halref) -> Graph:
     """
+    Given a HAL document URI, returns the corresponding Graph.
+    
     halref: URIRef or str
         HAL document URL or identifier
     """
@@ -18,8 +20,10 @@ def get_hal_graph(halref) -> Graph:
 def halref_to_data_url(halref: str) -> str:
     """
     Given a HAL or HAL-data document URIRef, returns the corresponding HAL-data URL
+    
     halref: str
         HAL document URL
+        
     (Most important!) https://hal.archives-ouvertes.fr/hal-02371715v2 -> https://data.archives-ouvertes.fr/document/hal-02371715v2
     https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf -> https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf
     https://data.archives-ouvertes.fr/document/hal-02371715 -> https://data.archives-ouvertes.fr/document/hal-02371715
@@ -31,5 +35,28 @@ def halref_to_data_url(halref: str) -> str:
         parsed_ref = parsed_ref._replace(netloc="data.archives-ouvertes.fr",
                                          path=f"/document{parsed_ref.path}")
     return urlunparse(parsed_ref)
+
+
+# +
+def to_canonical(halref) -> URIRef:
+    """
+    halref: URIRef or str
+        HAL document URI
+    """
+    if str(halref).endswith('.rdf'):
+        return URIRef(str(halref)[:-4])
+    else:
+        return halref
+
+def to_rdf(halref) -> URIRef:
+    """
+    halref: URIRef or str
+        HAL document URI
+    """
+    if not str(halref).endswith('.rdf'):
+        return URIRef(f"{str(halref)}.rdf")
+    else:
+        return halref
+# -
 
 
