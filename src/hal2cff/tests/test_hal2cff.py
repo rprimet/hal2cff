@@ -37,5 +37,5 @@ def test_hal2cff():
 
 
 def test_hal2cff_validate():
-    dump = hal2cff("https://hal.archives-ouvertes.fr/hal-02447823")
+    dump = hal2cff("https://hal.archives-ouvertes.fr/inria-00582640")
     Citation(dump).validate()

@@ -29,7 +29,6 @@ def halref_to_data_url(halref: str) -> str:
     """
     parsed_ref = urlparse(halref)
     assert "archives-ouvertes.fr" in parsed_ref.netloc, "Expected HAL (or HAL-data) document URL"
-    assert "hal-" in parsed_ref.path, "Expected HAL (or HAL-data) document URL"
     if "hal.archives-ouvertes.fr" in parsed_ref.netloc:
         parsed_ref = parsed_ref._replace(netloc="data.archives-ouvertes.fr",
                                          path=f"/document{parsed_ref.path}")
