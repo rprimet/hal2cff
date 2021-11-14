@@ -1,5 +1,5 @@
 from rdflib import URIRef
-from hal2cff._hal2cff import get_hal_graph, hal2cff, hal_document, halref_to_data_url, to_canonical, to_rdf
+from hal2cff._hal2cff import get_author_nodes, get_hal_graph, hal2cff, hal_document, halref_to_data_url, to_canonical, to_rdf
 
 def test_halref_to_data_url():
     assert halref_to_data_url("https://hal.archives-ouvertes.fr/hal-02371715v2") == "https://data.archives-ouvertes.fr/document/hal-02371715v2"
@@ -16,7 +16,11 @@ def test_to_rdf():
     assert to_rdf(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2")) == URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf")
     assert to_rdf(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf")) == URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf")
 
-    
+
+def test_get_author_nodes():
+    assert len(list(get_author_nodes(get_hal_graph("https://data.archives-ouvertes.fr/document/hal-02485642v2")))) == 8
+
+
 def test_hal_document():
     model = hal_document("https://hal.archives-ouvertes.fr/hal-01361430v1")
     assert "Progressive Analytics" in model.title

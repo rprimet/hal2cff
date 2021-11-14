@@ -23,13 +23,6 @@
 #
 # Point to make: really nice for projects that require a server side but no (writable) DB 
 
-g = get_hal_graph("https://data.archives-ouvertes.fr/document/hal-02371715.rdf")
-
-list(get_author_nodes(get_hal_graph("https://data.archives-ouvertes.fr/document/hal-02371715v2")))
-
-for (sub, obj, pred) in g:
-    print(sub,obj,pred)
-
 get_abstract(g, URIRef("https://data.archives-ouvertes.fr/document/hal-02371715"))
 
 get_one_version(g, "https://data.archives-ouvertes.fr/document/hal-02371715")

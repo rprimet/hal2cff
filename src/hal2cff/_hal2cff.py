@@ -176,5 +176,3 @@ def hal2cff(halref):
     """
     doc = hal_document(halref)
     return dump_cff(doc)
-
-
