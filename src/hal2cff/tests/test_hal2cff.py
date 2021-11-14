@@ -23,9 +23,9 @@ def test_get_author_nodes():
 
 def test_hal_document():
     model = hal_document("https://hal.archives-ouvertes.fr/hal-01361430v1")
-    assert "Progressive Analytics" in model.title
-    assert "sequential computations" in model.abstract
-    assert len(model.authors) == 2
+    assert "Progressive Analytics" in model['title']
+    assert "sequential computations" in model['abstract']
+    assert len(model['authors']) == 2
 
     
 def test_hal2cff():
