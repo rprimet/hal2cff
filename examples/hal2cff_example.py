@@ -1,3 +1,5 @@
+from hal2cff import hal2cff
+
 # # hal2cff example
 
 # For the first step, we want to get
@@ -23,17 +25,6 @@
 #
 # Point to make: really nice for projects that require a server side but no (writable) DB 
 
-get_abstract(g, URIRef("https://data.archives-ouvertes.fr/document/hal-02371715"))
-
-get_one_version(g, "https://data.archives-ouvertes.fr/document/hal-02371715")
-
-get_latest_version("https://data.archives-ouvertes.fr/document/hal-02371715v1")
-
-model = hal2cff("https://hal.archives-ouvertes.fr/hal-02371715")
-model = hal2cff("https://hal.archives-ouvertes.fr/hal-01361430v1")
-
-model
-
-print(output_cff(model))
+print(hal2cff("https://hal.archives-ouvertes.fr/hal-01361430v1"))
 
 
