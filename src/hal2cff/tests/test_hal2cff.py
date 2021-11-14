@@ -1,4 +1,5 @@
 from rdflib import URIRef
+from cffconvert import Citation
 from hal2cff._hal2cff import get_author_nodes, get_hal_graph, hal2cff, hal_document, halref_to_data_url, to_canonical, to_rdf
 
 def test_halref_to_data_url():
@@ -33,4 +34,8 @@ def test_hal2cff():
     assert "DiCoDiLe" in dump
     other_dump = hal2cff("https://hal.archives-ouvertes.fr/hal-02485642")
     assert "Primet" in other_dump
-    
+
+
+def test_hal2cff_validate():
+    dump = hal2cff("https://hal.archives-ouvertes.fr/hal-02447823")
+    Citation(dump).validate()

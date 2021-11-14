@@ -167,8 +167,9 @@ def dump_cff(doc):
     })
 
 
-def hal2cff(halref):
+def hal2cff(halref) -> str:
     """
+    Processes a HAL document and produces a CFF YAML document
     """
     doc = hal_document(halref)
     return dump_cff(doc)
