@@ -2,7 +2,6 @@ from rdflib import Graph, RDF, URIRef
 import rdflib
 import yaml
 from urllib.parse import urlparse, urlunparse
-from dataclasses import dataclass
 
 
 def get_hal_graph(halref) -> Graph:
@@ -117,21 +116,6 @@ def get_author_nodes(doc_graph: Graph):
     return doc_graph.subjects(RDF.type, URIRef("http://data.archives-ouvertes.fr/schema/Author"))
 
 
-# +
-@dataclass
-class HALAuthor:
-    firstName: str
-    familyName: str
-
-@dataclass
-class HALDocument:
-    title: str
-    abstract: str
-    authors: list[HALAuthor]
-
-
-# -
-
 def hal_document(halref):
     """
     halref: str
@@ -147,26 +131,29 @@ def hal_document(halref):
     title = get_title(latest_doc_graph, latest_version).value  # XXX None case (value)
     abstract = get_abstract(latest_doc_graph, latest_version).value  # XXX None case (value)
     
-    # XXX refactor!
     authors = []
     for node in get_author_nodes(latest_doc_graph):
         author_doc_ref = next(latest_doc_graph.objects(node, URIRef("http://data.archives-ouvertes.fr/schema/person")))
         author_graph = get_hal_graph(author_doc_ref)
         fname = get_attribute(author_graph, author_doc_ref, "http://xmlns.com/foaf/0.1/firstName")
         lname = get_attribute(author_graph, author_doc_ref, "http://xmlns.com/foaf/0.1/familyName")
-        authors.append(HALAuthor(firstName=fname.value, familyName=lname.value))
+        authors.append({'firstName': fname.value, 'familyName': lname.value})
     
-    return HALDocument(title=title, abstract=abstract, authors=authors)
+    return {
+        'title': title, 
+        'abstract': abstract,
+        'authors': authors
+    }
 
 
-def dump_cff(doc: HALDocument):
-    return yaml.dump({
+def dump_cff(doc):
+    return yaml.safe_dump({
         'cff-version': '1.2.0',
         'message': "If you use this software, please cite both the article from preferred-citation and the software itself.",
         'preferred-citation': {
-            'title': doc.title,
-            'abstract': doc.abstract,
-            'authors': doc.authors
+            'title': doc['title'],
+            'abstract': doc['abstract'],
+            'authors': doc['authors']
         }
     })
 
