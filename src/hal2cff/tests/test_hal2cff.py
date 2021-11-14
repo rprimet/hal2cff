@@ -20,6 +20,7 @@ def test_to_rdf():
 
 def test_get_author_nodes():
     assert len(list(get_author_nodes(get_hal_graph("https://data.archives-ouvertes.fr/document/hal-02485642v2")))) == 8
+    assert len(list(get_author_nodes(get_hal_graph("https://data.archives-ouvertes.fr/document/inria-00582640v2")))) == 4
 
 
 def test_hal_document():

@@ -112,7 +112,13 @@ def get_latest_version(doc_uri) -> URIRef:
 
 
 def get_author_nodes(doc_graph: Graph):
-    return doc_graph.subjects(RDF.type, URIRef("http://data.archives-ouvertes.fr/schema/Author"))
+    """
+    Returns nodes which contain a subject of type Author or CorrespondingAuthor
+    """
+    for s,p,o in doc_graph.triples((None, RDF.type, None)):
+        if o == URIRef("http://data.archives-ouvertes.fr/schema/Author") or \
+           o == URIRef("http://data.archives-ouvertes.fr/schema/CorrespondingAuthor"):
+            yield s
 
 
 def hal_document(halref):
