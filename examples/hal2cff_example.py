@@ -45,7 +45,6 @@ def halref_to_data_url(halref) -> URIRef:
         parsed_ref = parsed_ref._replace(netloc="data.archives-ouvertes.fr",
                                         path=f"/document{parsed_ref.path}")
     return urlunparse(parsed_ref)
-    
 
 
 halref_to_data_url("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf")
@@ -158,6 +157,7 @@ def hal2cff(halref):
     halref: str
         HAL document URL or identifier
     """
+    halref = halref_to_data_url(halref)
     halref = to_canonical(halref)
     graph = get_hal_graph(halref)
     one_version_halref = get_one_version(graph, halref)
@@ -178,7 +178,7 @@ def hal2cff(halref):
     return title, abstract, authors
 
 
-model = hal2cff("https://data.archives-ouvertes.fr/document/hal-02371715")
+model = hal2cff("https://hal.archives-ouvertes.fr/hal-02371715")
 
 model
 
