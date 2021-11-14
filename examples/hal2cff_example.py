@@ -36,19 +36,6 @@ model = hal2cff("https://hal.archives-ouvertes.fr/hal-01361430v1")
 
 model
 
-
-def output_cff(doc: HALDocument):
-    return yaml.dump({
-        'cff-version': '1.2.0',
-        'message': "If you use this software, please cite both the article from preferred-citation and the software itself.",
-        'preferred-citation': {
-            'title': doc.title,
-            'abstract': doc.abstract,
-            'authors': doc.authors
-        }
-    })
-
-
 print(output_cff(model))
 
 

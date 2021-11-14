@@ -63,6 +63,9 @@ def to_rdf(halref) -> URIRef:
 
 def get_attribute(doc_graph, doc_uri, attr_name):
     """
+    Retrieves an object whose subject is the canonical version of 'doc_uri' and whose
+    predicate is 'attr_name'.
+    
     doc_graph: Graph
     doc_uri: URIRef or str
     attr_name: URIRef or str
@@ -124,7 +127,7 @@ class HALDocument:
 
 # -
 
-def hal2cff(halref):
+def hal_document(halref):
     """
     halref: str
         HAL document URL or identifier
@@ -135,8 +138,8 @@ def hal2cff(halref):
     one_version_halref = get_one_version(graph, halref)
     latest_version = get_latest_version(one_version_halref)
     graph = get_hal_graph(latest_version)  # XXX do not reuse name!
-    title = get_title(graph, latest_version).value  # XXX None case
-    abstract = get_abstract(graph, latest_version).value  # XXX None case
+    title = get_title(graph, latest_version).value  # XXX None case (value)
+    abstract = get_abstract(graph, latest_version).value  # XXX None case (value)
     
     # XXX refactor!
     authors = []
@@ -148,3 +151,24 @@ def hal2cff(halref):
         authors.append(HALAuthor(firstName=fname.value, familyName=lname.value))
     
     return HALDocument(title=title, abstract=abstract, authors=authors)
+
+
+def dump_cff(doc: HALDocument):
+    return yaml.dump({
+        'cff-version': '1.2.0',
+        'message': "If you use this software, please cite both the article from preferred-citation and the software itself.",
+        'preferred-citation': {
+            'title': doc.title,
+            'abstract': doc.abstract,
+            'authors': doc.authors
+        }
+    })
+
+
+def hal2cff(halref):
+    """
+    """
+    doc = hal_document(halref)
+    return dump_cff(doc)
+
+
