@@ -18,12 +18,6 @@
 #
 # Point to make: really nice for projects that require a server side but no (writable) DB 
 
-to_canonical(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf"))
-
-to_canonical(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2"))
-
-to_rdf(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2"))
-
 to_rdf(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf"))
 
 g = get_hal_graph("https://data.archives-ouvertes.fr/document/hal-02371715.rdf")

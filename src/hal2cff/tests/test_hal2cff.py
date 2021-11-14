@@ -10,4 +10,8 @@ def test_halref_to_data_url():
 def test_to_canonical():
     assert to_canonical(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf")) == URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2")
     assert to_canonical(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2")) == URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2")
+
     
+def test_to_rdf():
+    assert to_rdf(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2")) == URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf")
+    assert to_rdf(URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf")) == URIRef("https://data.archives-ouvertes.fr/document/hal-02371715v2.rdf")
