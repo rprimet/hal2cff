@@ -26,5 +26,3 @@ from hal2cff import hal2cff
 # Point to make: really nice for projects that require a server side but no (writable) DB 
 
 print(hal2cff("https://hal.archives-ouvertes.fr/hal-01361430v1"))
-
-

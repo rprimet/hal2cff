@@ -1,3 +1,5 @@
 -e .
 jupyterlab
 jupytext
+ipywidgets
+voila
