@@ -137,7 +137,7 @@ def hal_document(halref):
         author_graph = get_hal_graph(author_doc_ref)
         fname = get_attribute(author_graph, author_doc_ref, "http://xmlns.com/foaf/0.1/firstName")
         lname = get_attribute(author_graph, author_doc_ref, "http://xmlns.com/foaf/0.1/familyName")
-        authors.append({'firstName': fname.value, 'familyName': lname.value})
+        authors.append({'given-names': fname.value, 'family-names': lname.value})
     
     return {
         'title': title, 
@@ -147,13 +147,22 @@ def hal_document(halref):
 
 
 def dump_cff(doc):
+    """
+    Note that while we do a "credit redirection" style CFF, the spec
+    requires authors and title both at the top-level and at the preferred-citation level
+    (those may be different of course, but since we are only extracting bibliographical info
+    from HAL, we'll fill them with identical values)
+    """
     return yaml.safe_dump({
         'cff-version': '1.2.0',
         'message': "If you use this software, please cite both the article from preferred-citation and the software itself.",
+        'title': doc['title'],
+        'authors': doc['authors'],
         'preferred-citation': {
             'title': doc['title'],
             'abstract': doc['abstract'],
-            'authors': doc['authors']
+            'authors': doc['authors'],
+            'type': 'generic',
         }
     })
 
