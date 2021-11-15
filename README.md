@@ -9,6 +9,6 @@ Want to add a [CITATION.cff](https://citation-file-format.github.io/) file to yo
 
 - `hal2cff` is meant to fill in metadata (and alleviate the chore of doing so) and create a draft CITATION.cff file, **not** 
 a finished one that can be checked-in unmodified
-- early WIP, no maintenance committment (this is mostly an example designed for a tutorial)
+- early WIP, no maintenance commitment (this is mostly an example designed for a tutorial)
 - missing features (in particular, affiliations, and document type -- for now set to `generic`)
 - This will create a "[credit redirection](https://github.com/citation-file-format/citation-file-format/blob/main/schema-guide.md#credit-redirection)"-style CITATION.cff, which may not be optimal (as the software itself should be cited)
