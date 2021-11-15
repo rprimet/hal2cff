@@ -21,7 +21,7 @@ jobs:
           pip install -e .[test]
           pytest --cov-report=xml --cov=hal2cff
       - name: Upload coverage
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
           flags: unittests 
           fail_ci_if_error: true 
