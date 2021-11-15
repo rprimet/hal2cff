@@ -5,7 +5,7 @@ on:
     branches: main
     tags:
       - '*'
-
+jobs:
   test:
     runs-on: ubuntu-20.04
     defaults:
