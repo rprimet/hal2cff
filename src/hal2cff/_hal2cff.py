@@ -169,7 +169,7 @@ def dump_cff(doc):
             'authors': doc['authors'],
             'type': 'generic',
         }
-    })
+    }, allow_unicode=True)
 
 
 def hal2cff(halref) -> str:
