@@ -1,0 +1,24 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: main
+    tags:
+      - '*'
+
+  test:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash -l {0}
+      - uses: actions/checkout@v2
+      - name: Run unit tests
+        run: |
+          pip install -e .[test]
+          pytest --cov-report=xml --cov=hal2cff
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          flags: unittests 
+          fail_ci_if_error: true 
+          verbose: true
