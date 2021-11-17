@@ -14,7 +14,7 @@ button = widgets.Button(description="Generate CFF")
 spinner = widgets.HTML(value="""
 <img width="64" alt="Loading icon cropped" src="https://upload.wikimedia.org/wikipedia/commons/9/92/Loading_icon_cropped.gif">
 """, layout=widgets.Layout(visibility="hidden"))
-display(widgets.HBox([url, button]))
+display(widgets.HBox([url, button, spinner]))
 output = widgets.Output()
 display(output)
 
