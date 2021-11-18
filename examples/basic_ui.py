@@ -12,7 +12,7 @@ from hal2cff import hal2cff
 url = widgets.Textarea(value="https://hal.archives-ouvertes.fr/hal-02485642v2")
 button = widgets.Button(description="Generate CFF")
 spinner = widgets.HTML(value="""
-<img width="64" alt="Loading icon cropped" src="https://upload.wikimedia.org/wikipedia/commons/9/92/Loading_icon_cropped.gif">
+<img width="32" alt="Loading icon cropped" src="https://upload.wikimedia.org/wikipedia/commons/9/92/Loading_icon_cropped.gif">
 """, layout=widgets.Layout(visibility="hidden"))
 display(widgets.HBox([url, button, spinner]))
 output = widgets.Output()
@@ -32,5 +32,3 @@ def generate_cff(_):
 
 
 button.on_click(generate_cff)
-
-
