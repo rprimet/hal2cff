@@ -121,6 +121,16 @@ def get_author_nodes(doc_graph: Graph):
             yield s
 
 
+def _value_or_default(literal, default):
+    if literal is not None:
+        return literal.value
+    else:
+        return default
+
+def _value_or_fill(literal):
+    return _value_or_default(literal,
+                             "COULD NOT RETRIEVE FROM HAL, PLESE FILL")
+
 def hal_document(halref):
     """
     halref: str
@@ -133,22 +143,31 @@ def hal_document(halref):
     latest_version = get_latest_version(one_version_halref)
     
     latest_doc_graph = get_hal_graph(latest_version)
-    title = get_title(latest_doc_graph, latest_version).value  # XXX None case (value)
-    abstract = get_abstract(latest_doc_graph, latest_version).value  # XXX None case (value)
+
+    retval = {}
+    # title is mandatory, we'll crash if it is absent
+    retval['title'] = get_title(latest_doc_graph, latest_version).value
+    abstract = get_abstract(latest_doc_graph, latest_version).value
+    if abstract is not None:
+        retval['abstract'] = abstract
     
     authors = []
     for node in get_author_nodes(latest_doc_graph):
         author_doc_ref = next(latest_doc_graph.objects(node, URIRef("http://data.archives-ouvertes.fr/schema/person")))
         author_graph = get_hal_graph(author_doc_ref)
-        fname = get_attribute(author_graph, author_doc_ref, "http://xmlns.com/foaf/0.1/firstName")
-        lname = get_attribute(author_graph, author_doc_ref, "http://xmlns.com/foaf/0.1/familyName")
-        authors.append({'given-names': fname.value, 'family-names': lname.value})
+        fname = get_attribute(author_graph,
+                              author_doc_ref,
+                              "http://xmlns.com/foaf/0.1/firstName")
+        lname = get_attribute(author_graph,
+                              author_doc_ref,
+                              "http://xmlns.com/foaf/0.1/familyName")
+        authors.append({
+            'given-names': _value_or_fill(fname), 
+            'family-names': _value_or_fill(lname)}
+        )
     
-    return {
-        'title': title, 
-        'abstract': abstract,
-        'authors': authors
-    }
+    retval['authors'] = authors
+    return retval
 
 
 def dump_cff(doc):
