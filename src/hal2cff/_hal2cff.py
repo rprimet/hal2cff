@@ -147,9 +147,9 @@ def hal_document(halref):
     retval = {}
     # title is mandatory, we'll crash if it is absent
     retval['title'] = get_title(latest_doc_graph, latest_version).value
-    abstract = get_abstract(latest_doc_graph, latest_version).value
+    abstract = get_abstract(latest_doc_graph, latest_version)
     if abstract is not None:
-        retval['abstract'] = abstract
+        retval['abstract'] = abstract.value
     
     authors = []
     for node in get_author_nodes(latest_doc_graph):
@@ -177,18 +177,22 @@ def dump_cff(doc):
     (those may be different of course, but since we are only extracting bibliographical info
     from HAL, we'll fill them with identical values)
     """
-    return yaml.safe_dump({
+    cffdoc = {
         'cff-version': '1.2.0',
         'message': "If you use this software, please cite both the article from preferred-citation and the software itself.",
         'title': doc['title'],
         'authors': doc['authors'],
         'preferred-citation': {
             'title': doc['title'],
-            'abstract': doc['abstract'],
             'authors': doc['authors'],
-            'type': 'generic',
+            'type': 'generic'
         }
-    }, allow_unicode=True)
+    }
+    
+    if 'abstract' in doc:
+        cffdoc['preferred-citation']['abstract'] = doc['abstract']
+    
+    return yaml.safe_dump(cffdoc, allow_unicode=True)
 
 
 def hal2cff(halref) -> str:
