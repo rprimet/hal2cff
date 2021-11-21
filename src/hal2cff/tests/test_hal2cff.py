@@ -41,3 +41,6 @@ def test_hal2cff():
 def test_hal2cff_validate():
     dump = hal2cff("https://hal.archives-ouvertes.fr/inria-00582640")
     Citation(dump).validate()
+    # the document below has no abstract
+    dump = hal2cff("https://hal.archives-ouvertes.fr/hal-03295913v1")
+    Citation(dump).validate()
